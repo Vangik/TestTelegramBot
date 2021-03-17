@@ -1,10 +1,9 @@
-import com.fasterxml.jackson.annotation.JsonCreator;
+import Model.Model;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -27,13 +26,13 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMsg(Message message, String text){
-        SendMessage sendMessage= new SendMessage();
+    public void sendMsg(Message message, String text) {
+        SendMessage sendMessage = new SendMessage();
         //sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
-        try{
+        try {
             setButtons(sendMessage);
             sendMessage(sendMessage);
         } catch (TelegramApiException e) {
@@ -45,32 +44,35 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Model model = new Model();
         Message message = update.getMessage();
-        if(message != null && message.hasText());
-            switch (message.getText()){
-                case "/help":
-                    sendMsg(message,"How can i help you");
-                    break;
-                case "/info":
-                    sendMsg(message,"Information about bot");
-                    break;
-                default:
-                    try {
-                        sendMsg(message,Weather.getWeather(message.getText(), model));
-                    } catch (IOException e) {
-                        sendMsg(message,"Can not find "+message);
-                    }
-                    break;
-            }
+        if (message != null &&message.hasText()) ;
+        switch (message.getText()) {
+            case "/help":
+                sendMsg(message, "How can i help you");
+                break;
+            case "/info":
+                sendMsg(message, "Information about bot");
+                break;
+            case "/start":
+                sendMsg(message, "Bot has been started");
+                break;
+            default:
+                try {
+                    sendMsg(message, Weather.getWeather(message.getText(), model));
+                } catch (IOException e) {
+                    sendMsg(message, "Can not find " + message);
+                }
+                break;
+        }
     }
 
-    public void setButtons(SendMessage sendMessage){
-        ReplyKeyboardMarkup replyKeyboardMarkup= new ReplyKeyboardMarkup();
+    public void setButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
 
-        List<KeyboardRow> keyboardRowList= new ArrayList<>();
+        List<KeyboardRow> keyboardRowList = new ArrayList<>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
 
         keyboardFirstRow.add(new KeyboardButton("/help"));

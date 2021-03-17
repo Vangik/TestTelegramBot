@@ -1,16 +1,14 @@
+import Model.Model;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Scanner;
 
 public class Weather {
     public static String getWeather(String message, Model model) throws IOException {
-        String uUrl = "http://api.openweathermap.org/data/2.5/weather?q=Lviv&units=metric&appid=65b15a75b268e360a4e0e54ddb108047";
+        String uUrl = "http://api.openweathermap.org/data/2.5/weather?q="+message+"&units=metric&appid=65b15a75b268e360a4e0e54ddb108047";
         URL url = new URL(uUrl);
 
         Scanner scanner = new Scanner(url.openStream());
